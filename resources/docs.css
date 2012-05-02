@@ -246,12 +246,28 @@ Sometimes you need to specify some inline styles in the HTML examples to overrid
 }
 /* Showing examples of documentation examples would be a bit recursive, but it's a checkerboard background to be able to see edges of elements regardless of their color. */
 .styledocco-example {
+    position: relative;
     margin-top: 10px;
     padding: 15px;
     overflow: auto;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQAQMAAAAlPW0iAAAAAXNSR0IArs4c6QAAAAZQTFRF+vr6////+o8bnQAAABBJREFUCB1jYPjPgBXhEAYAfr8P8bm+jEoAAAAASUVORK5CYII=);
     border-top: 1px dotted rgb(220, 220, 225);
 }
+.styledocco-example-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+}
+.styledocco-example-grid-line {
+    position: absolute;
+    background: rgba(119, 127, 136, .25);
+    height: 100%;
+    float: left;
+}
+
 pre + .styledocco-example {
     margin-top: 0;
     border-top: 0;

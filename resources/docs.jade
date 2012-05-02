@@ -13,6 +13,12 @@ html
   body
     .styledocco-container
       .styledocco-sidebar
+        form#grid-settings
+          input#grid-col-count(type="number", value="9", min="0")
+          input#grid-col-width(type="number", value="60", min="0")
+          input#grid-gutter-width(type="number", value="20", min="0")
+          button(type="submit") Update grid
+          button#grid-hide Hide grid
         a.styledocco-brand(href="#{project.root}index.html") #{project.name}
         each links, folder in project.menu
           unless folder == './'

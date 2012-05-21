@@ -58,22 +58,26 @@ makeSections = exports.makeSections = (blocks) ->
 
 # # Internal functions.
 
-# If we encounter code blocks in documentation, add example HTML output and
+# If we encounter code blocks in documentation, add example HTML and
 # highlight the code snippet.
 addDocExamples = (block) ->
-  block.docs = block.docs.reduce(
-    (tokens, token) ->
-      if token.type is 'code'
-        tokens.push
-          type: 'html'
-          pre: true
-          text: "<div class=\"styledocco-example\">#{token.text}</div>"
-        token.text = highlight.highlightAuto(token.text).value
-        token.escaped = true
-      tokens.push token
-      tokens
-    [])
-  block
+  newBlock =
+    code: block.code
+    docs: block.docs.reduce(
+      (tokens, token) ->
+        if token.type is 'code'
+          tokens.push
+            type: 'html'
+            pre: true
+            text: "<div class=\"styledocco-example\">#{token.text}</div>"
+          token.text = highlight.highlightAuto(token.text).value
+          token.escaped = true
+        tokens.push token
+        tokens
+      [])
+  # Copy marked's custom links property on the docs array
+  newBlock.docs.links = block.docs.links
+  newBlock
 
 
 # Split into sections with headers as delimiters.

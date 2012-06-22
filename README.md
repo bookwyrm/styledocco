@@ -40,9 +40,11 @@ If your project includes a `README` file, it will be used as the base for an `in
 
  * `--name`, `-n`      Name of the project *(required)*
  * `--out`, `-o`       Output directory *(default: "docs")*
- * `--resources`, `-s` Directory for custom template, CSS and JavaScript. Can be the same as the output directory if you don't want to overwrite your changes. StyleDocco defaults will be used for any required file not found in this directory. *(optional)*
+ * `--resources`, `-s` Directory with files to customize the documentation output. StyleDocco defaults will be used for any required file not found in this directory. *(optional)*
  * `--preprocessor`    Custom preprocessor command. To disable preprocessing, use `none`. *(optional)* (ex: `--preprocessor "scss --load-path=deps/"`)
  * `--include`         Prepend specified CSS file to the documentation stylesheet. *(optional)* (ex: `--include mysite.css`)
+ * `--verbose`         Show log messages when generating the documentation. *(default: false)*
+ *                     Directory containing the stylesheets to document.
 
 ### Usage examples
 
@@ -81,6 +83,5 @@ Provides extra visual weight and identifies the primary action in a set of butto
 
 ## Acknowledgements
 
-A lot of the heavy lifting in StyleDocco is done by the excellent [Marked](https://github.com/chjj/marked) module by Christopher Jeffrey. The original [Docco](https://github.com/jashkenas/docco) by Jeremy Ashkenas and [Docco Husky](https://github.com/mbrevoort/docco-husky) by Mike Brevoort were also of great help to this project. [Knyle Style Sheets](https://github.com/kneath/kss), a similar project written in Ruby, has also been an inspiration to StyleDocco.
-
+A lot of the heavy lifting in StyleDocco is done by the excellent [Marked](https://github.com/chjj/marked) module by Christopher Jeffrey. The original [Docco](https://github.com/jashkenas/docco) by Jeremy Ashkenas and [Knyle Style Sheets](https://github.com/kneath/kss) have also been sources of inspiration for StyleDocco.
 <a href="https://github.com/jacobrask/styledocco" id="styledocco-fork-me"><img style="position:fixed;top:0;right:0;border:0;" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>

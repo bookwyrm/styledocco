@@ -8,11 +8,10 @@
 
 StyleDocco generates documentation and style guide documents from your stylesheets.
 
-Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wiki/Markdown) and displayed in a generated HTML document. You can write code examples prefixed with 4 spaces (or between <code>```</code>, [GitHub code fences](http://github.github.com/github-flavored-markdown/)) in your comments, and StyleDocco both renders the HTML and shows the code example.
+Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wiki/Markdown) and displayed in a generated HTML document. You can write code examples prefixed with 4 spaces or between [code fences](http://github.github.com/github-flavored-markdown/) (<code>```</code>) in your comments, and StyleDocco both renders the HTML and shows the code example.
 
 An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
 
-The document is automatically split into a new sections when it encounters a horizontal rule. Only comments at the beginning of new lines are included so put some whitespace before a comment to exlude it from the style guide.
 
 Suggestions, feature requests and bug reports are very welcome, either at [GitHub](https://github.com/jacobrask/styledocco/issues) or on Twitter ([@jacobrask](https://twitter.com/jacobrask)).
 
@@ -71,6 +70,10 @@ Would display the description, a rendered button as well as the example HTML cod
 
 See the `examples` folder for more in-depth examples.
 
+### Tips and tricks
+
+ * Put some whitespace before a comment block to exclude it from the documentation.
+ * Horizontal rules (`-----`, `* * *`, etc) will automatically create a new section in the documentation.
 
 ## Acknowledgements
 

@@ -1,13 +1,13 @@
 'use strict';
 
 var async = require('async');
-var csso = require('csso');
 var exec = require('child_process').exec;
 var findit = require('findit');
 var fs = require('fs');
 var jade = require('jade');
 var marked = require('marked');
 var mkdirp = require('mkdirp');
+var ncss = require('ncss');
 var path = require('path');
 var uglify = require('uglify-js');
 
@@ -20,15 +20,10 @@ var baseFilename = function(str) {
   return path.basename(str, path.extname(str));
 };
 
-// Solve the relative path between two relative paths
-var relative2 = function(from, to) {
-  return path.relative(path.resolve(from), path.resolve(to));
-};
-
 // Build an HTML file name, named by it's path relative to basePath
 var htmlFilename = function(file, basePath) {
   return path.join(
-    path.dirname(relative2(basePath, file) || path.basename(basePath)),
+    path.dirname(path.relative(basePath, file) || path.basename(basePath)),
     baseFilename(file) + '.html'
   ).replace(/[\\/]/g, '-');
 };
@@ -56,11 +51,12 @@ var readFirstFile = function() {
 // Make `link` objects for the menu.
 var menuLinks = function(files, basePath) {
   return files.map(function(file) {
-    var parts = file.split('/').splice(1);
+    var parts = path.relative(basePath, file).split('/');
+    parts.pop(); // Remove filename
     return {
       name: baseFilename(file),
       href: htmlFilename(file, basePath),
-      directory: parts.length > 1 ? parts[0] : './'
+      directory: parts[parts.length-1] || './'
     };
   })
   .reduce(function(links, link) {
@@ -103,12 +99,12 @@ var cli = function(options) {
   });
 
   // Get custom or default CSS file
-  var styledoccoCss = readFirstFile(
-    options.resources + '/docs.css',
-    defaultResourceDir + '/docs.css'
-  );
-  // Get custom include CSS
-  styledoccoCss += readFirstFile(options.include);
+  var styledoccoCss =
+    readFirstFile(options.include) +
+    readFirstFile(
+      options.resources + '/docs.css',
+      defaultResourceDir + '/docs.css'
+    );
 
   // Get custom or default JS file
   var js = readFirstFile(
@@ -123,13 +119,20 @@ var cli = function(options) {
       title: baseFilename(source),
       sections: sections,
       project: { name: options.name, menu: menu },
-      css: csso.justDoIt(styledoccoCss + css),
+      css: ncss(css + styledoccoCss),
       js: uglify(js)
     });
   };
 
   // Find files
-  var files = findit.sync(options.basePath)
+  var files = options['in'].reduce(function(files, file) {
+      if (fs.statSync(file).isDirectory()) {
+        files = files.concat(findit.sync(file));
+      } else {
+        files.push(file);
+      }
+      return files;
+    }, [])
     .filter(function(file) {
       // No hidden files
       if (file.match(/(\/|^)\.[^\.\/]/)) return false;
@@ -142,8 +145,10 @@ var cli = function(options) {
   if (!files.length) return console.error('No files found');
 
   var preprocess = function(file, cb) {
-    if (options.preprocessor || fileTypes[path.extname(file)]) {
-      exec((options.preprocessor || fileTypes[path.extname(file)]) + ' ' + file, function(err, stdout, stderr) {
+    var pp = options.preprocessor || fileTypes[path.extname(file)];
+    if (pp != null) {
+      exec(pp + ' ' + file, function(err, stdout, stderr) {
+        log('styledocco: preprocessing ' + file + ' with ' + pp);
         // Fail gracefully on preprocessor errors
         if (err != null) console.error(err.message);
         if (stderr.length) console.error(stderr);
@@ -157,8 +162,8 @@ var cli = function(options) {
   // Build menu
   var menu = menuLinks(files, options.basePath);
 
-  // Run files through StyleDocco parser. Async needed due to preprocessing.
-  async.map(files, function(file, cb) {
+  // Run files through preprocessor and StyleDocco parser.
+  async.mapSeries(files, function(file, cb) {
     var content = fs.readFileSync(file, 'utf-8');
     preprocess(file, function(err, css) {
       cb(null, {
@@ -183,6 +188,7 @@ var cli = function(options) {
     // Write files to the output dir.
     htmlFiles.map(function(file) {
       var dest = path.join(options.out, htmlFilename(file.path, options.basePath));
+      log('styledocco: writing ' + file.path + ' -> ' + dest);
       return fs.writeFileSync(dest, file.html);
     });
   });

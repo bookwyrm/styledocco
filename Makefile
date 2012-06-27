@@ -8,7 +8,7 @@ test:
 test-browser: test-browser/tests.js
 	@$(BROWSER) test-browser/test.html
 
-test-browser/tests.js:
+test-browser/tests.js: test/
 	@./node_modules/.bin/browserify test-browser/browserify-entry.js -o test-browser/tests.js
 
 pages:
@@ -18,4 +18,7 @@ examples:
 	@./bin/styledocco -n StyleDocco -o ./examples/styledocco resources/docs.css
 	@cd ./examples/bootstrap && ../../bin/styledocco -n "Twitter Bootstrap" less/buttons.less
 
-.PHONY: all test test-browser pages examples
+lint:
+	@./node_modules/.bin/jshint styledocco.js cli.js resources/ bin/
+
+.PHONY: all test test-browser pages examples lint

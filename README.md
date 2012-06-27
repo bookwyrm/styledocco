@@ -12,7 +12,6 @@ Stylesheet comments will be parsed through [Markdown](http://en.wikipedia.org/wi
 
 An important philosophy of StyleDocco is to introduce as little custom syntax as possible, maintaining the stylesheet comments readable and useful even without StyleDocco.
 
-
 Suggestions, feature requests and bug reports are very welcome, either at [GitHub](https://github.com/jacobrask/styledocco/issues) or on Twitter ([@jacobrask](https://twitter.com/jacobrask)).
 
 
@@ -83,6 +82,7 @@ Provides extra visual weight and identifies the primary action in a set of butto
 
  * Put some whitespace before a comment block to exclude it from the documentation.
  * Horizontal rules (`-----`, `* * *`, etc) will automatically create a new section in the documentation.
+
 
 ## Acknowledgements
 
